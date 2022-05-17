@@ -3,14 +3,15 @@
 //
 
 #include "dataGenerator.h"
-int howManyBin(int data[], int binSize, int quantity){
+int howManyBin(std::vector<int> data, int binSize, int quantity){
     int numOfBins = 1;
     int sumInBin = 0;
     for (int i = 0; i < quantity; ++i) {
-        if (sumInBin + data[i] <= binSize){
-            sumInBin += data[i];
+        int x = data.at(i);
+        if (sumInBin + x <= binSize){
+            sumInBin += data.at(i);
         } else{
-            sumInBin = data[i];
+            sumInBin = data.at(i);
             numOfBins++;
         }
     }

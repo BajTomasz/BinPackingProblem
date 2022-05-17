@@ -9,14 +9,16 @@
 
 int main(int argc, char **argv) {
 
-    int minRange = 1;
-    int maxRange = 15;
+    int minWeight = 1;
+    int maxWeight = 15;
     int binSize = 20; //binSize > maxRange
-    int quantity = 200;
-    int data [quantity];
-    dataGenerator(data, minRange, maxRange, quantity);
+    const int quantity = 100;
+    std::vector<int> data;
+
+    data = dataGenerator(data, minWeight, maxWeight, quantity);
+    hillClimbing(data, binSize, quantity);
     //std::cout << howManyBin(data, binSize, quantity) << std::endl;
-    tabuSearch(data, binSize, quantity);
+    //tabuSearch(data, binSize, quantity);
     //std::cout << howManyBin(data, binSize, quantity) << std::endl;
     return 0;
 

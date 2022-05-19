@@ -15,11 +15,11 @@ void hillClimbing(std::vector<int> xTymczasowy, int binSize, int quantity) {
     // sporadic munmap_chunk(): invalid pointer, free(): invalid pointer
     int yTymczasowe = howManyBin(xTymczasowy, binSize, quantity);
     int yMax = yTymczasowe;
-    //std::vector<int> xMax = xTymczasowy;
+    std::vector<int> xMax = xTymczasowy;
 
     std::cout << yMax << std::endl;
 
-    //srand((unsigned) time(NULL));
+    srand((unsigned) time(NULL));
     int x = rand() % (std::end(xTymczasowy) - std::begin(xTymczasowy));
     int xStart;
     int iMax;
@@ -30,18 +30,18 @@ void hillClimbing(std::vector<int> xTymczasowy, int binSize, int quantity) {
         iMax = 0;
         for (int i = 0; i <= range; ++i) {
             if (x-i>=0 || x+i < xTymczasowy.size()) {
-                std::iter_swap(xTymczasowy.begin(), xTymczasowy.begin()-i);
+                std::swap(xTymczasowy[x], xTymczasowy[x-1]);
                 yTymczasowe = howManyBin(xTymczasowy, binSize, quantity);
                 if (yTymczasowe < yMax) {
                     yMax = yTymczasowe;
-                    //xMax = xTymczasowy;
+                    xMax = xTymczasowy;
                     iMax = i;
                 }
-                std::iter_swap(xTymczasowy.begin(), xTymczasowy.begin()+i);
+                std::swap(xTymczasowy[x], xTymczasowy[x+1]);
                 yTymczasowe = howManyBin(xTymczasowy, binSize, quantity);
                 if (yTymczasowe < yMax) {
                     yMax = yTymczasowe;
-                    //xMax = xTymczasowy;
+                    xMax = xTymczasowy;
                     iMax = i;
                 }
             }

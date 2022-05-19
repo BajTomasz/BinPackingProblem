@@ -12,10 +12,11 @@ int main(int argc, char **argv) {
     int minWeight = 1;
     int maxWeight = 15;
     int binSize = 20; //binSize > maxRange
-    const int quantity = 100;
+    const int quantity = 50;
     std::vector<int> data;
 
     data = dataGenerator(data, minWeight, maxWeight, quantity);
+    //hillClimbingrandom(data, binSize, quantity);
     hillClimbing(data, binSize, quantity);
     //std::cout << howManyBin(data, binSize, quantity) << std::endl;
     //tabuSearch(data, binSize, quantity);

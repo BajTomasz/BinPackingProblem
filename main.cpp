@@ -1,8 +1,6 @@
 #include "dataGenerator.h"
 
 #include <vector>
-#include <string>
-#include <map>
 #include <iostream>
 
 
@@ -12,15 +10,15 @@ int main(int argc, char **argv) {
     int minWeight = 1;
     int maxWeight = 15;
     int binSize = 20; //binSize > maxRange
-    const int quantity = 50;
+    const int quantity = 400;
     std::vector<int> data;
 
     data = dataGenerator(data, minWeight, maxWeight, quantity);
-    //hillClimbingrandom(data, binSize, quantity);
+    std::cout << howManyBin(data, binSize, quantity) << std::endl;
+
     hillClimbing(data, binSize, quantity);
-    //std::cout << howManyBin(data, binSize, quantity) << std::endl;
-    //tabuSearch(data, binSize, quantity);
-    //std::cout << howManyBin(data, binSize, quantity) << std::endl;
+    hillClimbingrandom(data, binSize, quantity);
+    tabuSearch(data, binSize, quantity);
     return 0;
 
 

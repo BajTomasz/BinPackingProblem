@@ -8,5 +8,5 @@ add_executable(BinPackingProblem
         dataGenerator.cpp
         hillClimbing.cpp
         howManyBin.cpp
-        #tabuSearch.cpp
+        tabuSearch.cpp
         )

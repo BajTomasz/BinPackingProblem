@@ -3,44 +3,50 @@
 //
 
 #include "dataGenerator.h"
-#include <map>
+#include <list>
+#include <algorithm>
 
-void req(int *datacp, int *data, int *quantityPtr, int x, int *binSizePtr, int offset) {
-    for (int i = 0; i < x; ++i) {
-        datacp[offset] = data[offset-i]; // przypisz jeśli nie ma na tabu
-        req(datacp, data, quantityPtr, --x, binSizePtr, ++offset);
-    }  //jeśli nie to wyświetl wynik
-    int scr = howManyBin(datacp, *binSizePtr, *quantityPtr);
-    if (scr != 106){ std::cout << scr << std::endl; }
-}
-// trzeba przy rekurencji usuwać dany rekord z tablicy orginalnych danych
+void tabuSearch(std::vector<int> xTymczasowy, int binSize, int quantity){
+    int n = 1000;
 
-void tabuSearch(int data[], int binSize, int quantity){
-    int datacp[quantity];
-    int tmp;
-    int lowestBinsNum, oldLowestBinsNum, tmpBins;
-    lowestBinsNum = howManyBin(data, binSize, quantity);
-    oldLowestBinsNum = lowestBinsNum;
-    int minI, minJ;
-    int timer =50;
+    int yTymczasowe = howManyBin(xTymczasowy, binSize, quantity);
+    int yMax = yTymczasowe;
+    std::vector<int> xMax = xTymczasowy;
+    int maxTabuSize = 100;
+    std:: vector<std::vector<int>> tabuList = {xTymczasowy};
+    bool betterSolutionIsFound;
+    int tabuListOffset = 1;
+    srand((unsigned) time(NULL));
 
-    for (int i = 0; i < quantity; ++i) {
-        datacp[i] = data[i];
+    for (int i = 0; i < n; ++i) {
+        betterSolutionIsFound = false;
+        int x = rand() % (std::end(xTymczasowy) - std::begin(xTymczasowy));
+        for (int j = 0; j < xTymczasowy.size(); ++j) {
+            std::swap(xTymczasowy[x], xTymczasowy[j]);
+            yTymczasowe = howManyBin(xTymczasowy, binSize, quantity);
+            bool isNotInTabu = std::find(tabuList.begin(), tabuList.end(), xTymczasowy) == tabuList.end();
+            if (yTymczasowe < yMax and  isNotInTabu){
+                yMax = yTymczasowe;
+                xMax = xTymczasowy;
+                betterSolutionIsFound = true;
+            }
+        }
+        //jeżeli zneleźliśmy lepsze rozwiązanie dodaj do tabuListy
+        //jeśli nie to cofnij się w tabuLiście i szukaj innego rozwiązania
+        if (betterSolutionIsFound){
+            tabuList.push_back(xMax);
+            if (tabuList.size() > maxTabuSize) {
+                tabuList.erase(tabuList.begin());
+            }
+        } else if ((int)tabuList.size()-tabuListOffset >= 0) {
+            xTymczasowy = tabuList[tabuList.size() - tabuListOffset];
+            tabuListOffset++;
+            }
+        else{
+            std::cout <<"End of neighbors" <<std::endl;
+            break;
+        }
     }
 
-    int x = 10; //x kroków i x tabu
-/*
-    std::map<int, int> tabuList;
-    for (int i = 1; i <= x; ++i) {
-        tabuList[quantity-i] = datacp[quantity-i];
-        std::cout<<datacp[quantity-i]<<std::endl;
-    } // zapisanie ostatnich5 kroków do tabu
-*/
-
-    //for (int i = quantity-x; i > 0; --i) {
-    
-    
-        req(datacp, data, &quantity, x, &binSize, quantity-x);
-    //}
-
+    std::cout << yMax << std::endl;
 }

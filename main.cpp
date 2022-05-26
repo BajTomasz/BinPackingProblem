@@ -8,17 +8,18 @@
 int main(int argc, char **argv) {
 
     int minWeight = 1;
-    int maxWeight = 15;
-    int binSize = 20; //binSize > maxRange
-    const int quantity = 400;
+    int maxWeight = 10;
+    int binSize = 15; //binSize > maxRange
+    const int quantity = 500;
     std::vector<int> data;
 
     data = dataGenerator(data, minWeight, maxWeight, quantity);
     std::cout << howManyBin(data, binSize, quantity) << std::endl;
 
-    hillClimbing(data, binSize, quantity);
-    hillClimbingrandom(data, binSize, quantity);
-    tabuSearch(data, binSize, quantity);
+    //hillClimbing(data, binSize, quantity);
+    //hillClimbingrandom(data, binSize, quantity);
+    //tabuSearch(data, binSize, quantity);
+    //simulatdAnnealing(data, binSize, quantity);
     return 0;
 
 

@@ -9,4 +9,5 @@ add_executable(BinPackingProblem
         hillClimbing.cpp
         howManyBin.cpp
         tabuSearch.cpp
+        simulatedAnnealing.cpp
         )

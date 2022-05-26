@@ -2,54 +2,33 @@
 // Created by tomasz on 17.05.2022.
 //
 
+#include <random>
 
-#include <algorithm>
-#include <cmath>
-#include <iostream>
-#include <map>
-#include <numeric>
-#include <sstream>
-#include <string>
-#include <vector>
-#include <fstream>
-#include <any>
-#include <chrono>
-#include <list>
-#include <set>
-#include <tuple>
+#include "dataGenerator.h"
+#include "algorithm"
 
-
-template <typename T>
-void calculate_simulated_annealing(int *datacp,
-
-T start_solution,
-                                std::function<double(T)> cost,
-                                std::function<T(T)> next_solution,
-                                std::function<double(int)> temperature,
-                                std::function<bool(T)> term_condition,
-                                bool progress=false ) {
-    using namespace std;
-    auto solution = start_solution;
-    auto best_solution = solution;
+void simulatdAnnealing(std::vector<int> xTymczasowy, int binSize, int quantity) {
+    int n = 1000;
+    int yTymczasowe, yMax = howManyBin(xTymczasowy, binSize, quantity);
+    std::vector<int> xMax = xTymczasowy;
+    std::vector<int> xNext = xTymczasowy;
     int iteration_counter = 1;
-    do {
-        auto neighbor = next_solution(solution);
-        if (cost(neighbor) < cost(solution)) {
-            solution = neighbor;
+
+    for (int i = 0; i < n; ++i) {
+        std::shuffle(std::begin(xNext), std::end(xNext), std::mt19937(std::random_device()()));
+        if (howManyBin(xNext, binSize, quantity) < howManyBin(xTymczasowy, binSize, quantity)) {
+            xTymczasowy = xNext;
         } else {
-            uniform_real_distribution<double> u(0,1);
-            if (u(random_generator) < exp(-abs(cost(solution)-cost(neighbor))/temperature(iteration_counter))) {
-                solution = neighbor;
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_real_distribution<> dis(0.0, 1.0);
+            if (dis(gen) < exp(-abs(howManyBin(xTymczasowy, binSize, quantity) - howManyBin(xNext, binSize, quantity)) *
+                               iteration_counter / 1000)) {
+                xTymczasowy = xNext;
             }
         }
-        if (cost(solution) < cost(best_solution)) best_solution = solution;
+        if (howManyBin(xTymczasowy, binSize, quantity) < howManyBin(xMax, binSize, quantity)) xMax = xTymczasowy;
+        std::cout << iteration_counter << " " << howManyBin(xTymczasowy, binSize, quantity) <<  " " << howManyBin(xMax, binSize, quantity) << std::endl;
         iteration_counter++;
-        if (progress) cout << iteration_counter << " " << cost(solution) <<  " " << cost(best_solution) << " # SOL: " << solution << endl;
-
-    } while (term_condition(solution));
-    if (progress) cout << iteration_counter << " " << cost(best_solution) << " # " << solution << endl;
-    return best_solution;
+    }
 }
-
-
-#endif

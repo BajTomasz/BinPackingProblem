@@ -20,39 +20,24 @@ void hillClimbing(std::vector<int> xTymczasowy, int binSize, int quantity) {
         for (int j = 0; j < xTymczasowy.size(); ++j) {
             std::swap(xTymczasowy[x], xTymczasowy[j]);
             yTymczasowe = howManyBin(xTymczasowy, binSize, quantity);
-            if (yTymczasowe <= yMax) {
+            if (yTymczasowe < yMax) {
                 yMax = yTymczasowe;
             }
         }
+        std::cout << i << " " << yTymczasowe << " " << yMax << std::endl;
     }
-    std::cout << yMax << std::endl;
 }
 
 void hillClimbingrandom(std::vector<int> xTymczasowy, int binSize, int quantity) {
     int n = 1000;
     int yTymczasowe, yMax = howManyBin(xTymczasowy, binSize, quantity);
-    std::vector<int> xMax = xTymczasowy;
 
     for (int i = 0; i < n; ++i) {
         std::shuffle(std::begin(xTymczasowy), std::end(xTymczasowy), std::mt19937(std::random_device()()));
         yTymczasowe = howManyBin(xTymczasowy, binSize, quantity);
         if (yTymczasowe < yMax) {
             yMax = yTymczasowe;
-            xMax = xTymczasowy;
         }
+        std::cout << i << " " << yTymczasowe << " " << yMax << std::endl;
     }
-
-    int numOfBins = 1;
-    int sumInBin = 0;
-    for (int i = 0; i < quantity; ++i) {
-        int x = xMax.at(i);
-        if (sumInBin + x <= binSize) {
-            sumInBin += xMax.at(i);
-        } else {
-            sumInBin = xMax.at(i);
-            numOfBins++;
-        }
-    }
-    std::cout << numOfBins << std::endl;
-
 }

@@ -25,7 +25,7 @@ void tabuSearch(std::vector<int> xTymczasowy, int binSize, int quantity){
             std::swap(xTymczasowy[x], xTymczasowy[j]);
             yTymczasowe = howManyBin(xTymczasowy, binSize, quantity);
             bool isNotInTabu = std::find(tabuList.begin(), tabuList.end(), xTymczasowy) == tabuList.end();
-            if (yTymczasowe < yMax and  isNotInTabu){
+            if (yTymczasowe <= yMax and  isNotInTabu){
                 yMax = yTymczasowe;
                 xMax = xTymczasowy;
                 betterSolutionIsFound = true;
@@ -38,15 +38,14 @@ void tabuSearch(std::vector<int> xTymczasowy, int binSize, int quantity){
             if (tabuList.size() > maxTabuSize) {
                 tabuList.erase(tabuList.begin());
             }
+            tabuListOffset = 1;
         } else if ((int)tabuList.size()-tabuListOffset >= 0) {
             xTymczasowy = tabuList[tabuList.size() - tabuListOffset];
             tabuListOffset++;
             }
         else{
-            std::cout <<"End of neighbors" <<std::endl;
             break;
         }
+        std::cout << i << " " << yTymczasowe <<  " " << yMax << std::endl;
     }
-
-    std::cout << yMax << std::endl;
 }

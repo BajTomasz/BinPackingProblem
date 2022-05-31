@@ -6,19 +6,17 @@
 #include <list>
 #include <algorithm>
 
-void tabuSearch(std::vector<int> xTymczasowy, int binSize, int quantity){
-    int n = 1000;
+void tabuSearch(std::vector<int> xTymczasowy, int binSize, int quantity, int tabuSize, int iterations){
 
     int yTymczasowe = howManyBin(xTymczasowy, binSize, quantity);
     int yMax = yTymczasowe;
     std::vector<int> xMax = xTymczasowy;
-    int maxTabuSize = 100;
     std:: vector<std::vector<int>> tabuList = {xTymczasowy};
     bool betterSolutionIsFound;
     int tabuListOffset = 1;
     srand((unsigned) time(NULL));
 
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < iterations; ++i) {
         betterSolutionIsFound = false;
         int x = rand() % (std::end(xTymczasowy) - std::begin(xTymczasowy));
         for (int j = 0; j < xTymczasowy.size(); ++j) {
@@ -35,7 +33,7 @@ void tabuSearch(std::vector<int> xTymczasowy, int binSize, int quantity){
         //jeśli nie to cofnij się w tabuLiście i szukaj innego rozwiązania
         if (betterSolutionIsFound){
             tabuList.push_back(xMax);
-            if (tabuList.size() > maxTabuSize) {
+            if (tabuList.size() > tabuSize) {
                 tabuList.erase(tabuList.begin());
             }
             tabuListOffset = 1;

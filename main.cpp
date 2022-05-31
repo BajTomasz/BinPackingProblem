@@ -1,37 +1,42 @@
-#include "dataGenerator.h"
+//
+// Created by tomasz on 21.04.2022.
+//
 
-#include <vector>
-#include <iostream>
-#include <random>
+#include "algorithms.h"
 
-#include <complex>
 #include <any>
+#include <complex>
 #include <fstream>
+#include <iostream>
+#include <vector>
 
 std::vector<int> loadProblem(std::string fname) {
-    using namespace std;
     std::vector<int> problem;
-    istream *fst = &cin;
-    ifstream f;
-    if (fname != "") {
-        f = ifstream(fname);
-        fst = &f;
+    std::fstream file;
+    std::string line;
+    int x;
+
+    file.open(fname);
+    if ( file.is_open() ) {
+        while ( file ) {
+            std::getline (file, line);
+            std::stringstream sline(line);
+            sline >> x;
+            problem.push_back(x);
+        }
     }
-    string line;
-    while (getline(*fst, line)) {
-        stringstream sline(line);
-        int x;
-        sline >> x;
-        problem.push_back({x});
+    else {
+        std::cout << "Couldn't open file\n";
     }
+    file.close();
+
     return problem;
 }
 
 auto arg = [](int argc, char** argv, std::string name, auto default_value) -> decltype(default_value) {
-    using namespace std;
-    string paramname = "";
-    any ret = default_value;
-    for (auto argument: vector<string>(argv, argv + argc)) {
+    std::string paramname = "";
+    std::any ret = default_value;
+    for (auto argument: std::vector<std::string>(argv, argv + argc)) {
         if ((argument.size() > 0) && (argument[0] == '-')) {
             if (paramname != "") {
                 if (name == argument.substr(1)) ret = true;
@@ -50,54 +55,47 @@ auto arg = [](int argc, char** argv, std::string name, auto default_value) -> de
 };
 
 int main(int argc, char **argv) {
+    int minWeight = 1;
+    int maxWeight = 10;
+    std::vector<int> data;
 
     auto fname = arg(argc, argv, "fname", std::string(""));
     auto iterations = arg(argc, argv, "iterations", 1000);
-    auto method = arg(argc, argv, "method", std::string("hillClimbing"));
-    auto tabu_size = arg(argc, argv, "tabu_size", 100);
+    auto method = arg(argc, argv, "method", std::string(""));
+    auto tabuSize = arg(argc, argv, "tabuSize", 100);
+    auto quantity = arg(argc, argv, "quantity", 500);
+    auto binSize = arg(argc, argv, "binSize", 15);
+    auto generateData = arg(argc, argv, "dataGenerator", false);
 
-    int minWeight = 1;
-    int maxWeight = 10;
-    int binSize = 15; //binSize > maxRange
-    const int quantity = 500;
-    std::vector<int> data;
-
-    if(fname==""){
-        std::cout<<"Wpisz każdą daną po enterze"<<std::endl;
-        int fewfwef;
-        while(std::cin >> fewfwef){
-             data.push_back(fewfwef);
+    if(generateData){
+        data = dataGenerator(minWeight, maxWeight, quantity);
+    } else if(fname.empty()){
+        int record;
+        while(std::cin >> record){
+             data.push_back(record);
         }
     } else{
         data = loadProblem(fname);
-    }
-    for (int i = 0; i < data.size(); ++i) {
-        std::cout << data[i]<<std::endl;
+        quantity = data.size();
     }
 
-
-
-    //data = dataGenerator(data, minWeight, maxWeight, quantity);
-    //std::cout << howManyBin(data, binSize, quantity) << std::endl;
-
-
-//    if (method == "all") {
-//        hillClimbing(data, binSize, quantity, iterations);
-//        hillClimbingrandom(data, binSize, quantity, iterations);
-//        tabuSearch(data, binSize, quantity, tabu_size, iterations);
-//        simulatdAnnealing(data, binSize, quantity, iterations);
-//    } else     if (method == "hillClimbing") {
-//        hillClimbing(data, binSize, quantity, iterations);
-//    } else     if (method == "hillClimbingrandom") {
-//        hillClimbingrandom(data, binSize, quantity, iterations);
-//    } else     if (method == "tabu") {
-//        tabuSearch(data, binSize, quantity, tabu_size, iterations);
-//    } else     if (method == "simulatedAnnealing") {
-//        simulatdAnnealing(data, binSize, quantity, iterations);
-//    }
-
+    if (method == "all") {
+        hillClimbing(data, binSize, quantity, iterations);
+        hillClimbingRandom(data, binSize, quantity, iterations);
+        tabuSearch(data, binSize, quantity, tabuSize, iterations);
+        simulatedAnnealing(data, binSize, quantity, iterations);
+    } else if (method == "hillClimbing") {
+        hillClimbing(data, binSize, quantity, iterations);
+    } else if (method == "hillClimbingRandom") {
+        hillClimbingRandom(data, binSize, quantity, iterations);
+    } else if (method == "tabuSearch") {
+        tabuSearch(data, binSize, quantity, tabuSize, iterations);
+    } else if (method == "simulatedAnnealing") {
+        simulatedAnnealing(data, binSize, quantity, iterations);
+    } else if (method == "" && generateData) {
+        for (int i : data) {
+            std::cout << i << std::endl;
+        }
+    }
     return 0;
-
-
-
 }

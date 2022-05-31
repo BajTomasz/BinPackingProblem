@@ -2,7 +2,8 @@
 // Created by tomasz on 25.04.2022.
 //
 
-#include "dataGenerator.h"
+#include "algorithms.h"
+
 int howManyBin(std::vector<int> data, int binSize, int quantity){
     int numOfBins = 1;
     int sumInBin = 0;

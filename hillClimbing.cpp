@@ -2,40 +2,40 @@
 // Created by tomasz on 21.04.2022.
 //
 
+#include "algorithms.h"
+
+#include <algorithm>
 #include <random>
 
-#include "dataGenerator.h"
-#include "algorithm"
+void hillClimbing(std::vector<int> startSolution, int binSize, int quantity, int iterations) {
 
-void hillClimbing(std::vector<int> xTymczasowy, int binSize, int quantity, int iterations) {
-
-    int yTymczasowe = howManyBin(xTymczasowy, binSize, quantity);
-    int yMax = yTymczasowe;
+    int score = howManyBin(startSolution, binSize, quantity);
+    int bestScore = score;
 
     srand((unsigned) time(NULL));
 
     for (int i = 0; i < iterations; ++i) {
-        int x = rand() % (std::end(xTymczasowy) - std::begin(xTymczasowy));
-        for (int j = 0; j < xTymczasowy.size(); ++j) {
-            std::swap(xTymczasowy[x], xTymczasowy[j]);
-            yTymczasowe = howManyBin(xTymczasowy, binSize, quantity);
-            if (yTymczasowe < yMax) {
-                yMax = yTymczasowe;
+        int x = rand() % (std::end(startSolution) - std::begin(startSolution));
+        for (int j = 0; j < startSolution.size(); ++j) {
+            std::swap(startSolution[x], startSolution[j]);
+            score = howManyBin(startSolution, binSize, quantity);
+            if (score < bestScore) {
+                bestScore = score;
             }
         }
-        std::cout << i << " " << yTymczasowe << " " << yMax << std::endl;
+        std::cout << i << " " << score << " " << bestScore << std::endl;
     }
 }
 
-void hillClimbingrandom(std::vector<int> xTymczasowy, int binSize, int quantity, int iterations) {
-    int yTymczasowe, yMax = howManyBin(xTymczasowy, binSize, quantity);
-
+void hillClimbingRandom(std::vector<int> startSolution, int binSize, int quantity, int iterations) {
+    int score = howManyBin(startSolution, binSize, quantity);
+    int bestScore = score;
     for (int i = 0; i < iterations; ++i) {
-        std::shuffle(std::begin(xTymczasowy), std::end(xTymczasowy), std::mt19937(std::random_device()()));
-        yTymczasowe = howManyBin(xTymczasowy, binSize, quantity);
-        if (yTymczasowe < yMax) {
-            yMax = yTymczasowe;
+        std::shuffle(std::begin(startSolution), std::end(startSolution), std::mt19937(std::random_device()()));
+        score = howManyBin(startSolution, binSize, quantity);
+        if (score < bestScore) {
+            bestScore = score;
         }
-        std::cout << i << " " << yTymczasowe << " " << yMax << std::endl;
+        std::cout << i << " " << score << " " << bestScore << std::endl;
     }
 }

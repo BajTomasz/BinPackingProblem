@@ -2,48 +2,47 @@
 // Created by tomasz on 21.04.2022.
 //
 
-#include "dataGenerator.h"
-#include <list>
+#include "algorithms.h"
+
 #include <algorithm>
+#include <list>
 
-void tabuSearch(std::vector<int> xTymczasowy, int binSize, int quantity, int tabuSize, int iterations){
+void tabuSearch(std::vector<int> startSolution, int binSize, int quantity, int tabuSize, int iterations){
 
-    int yTymczasowe = howManyBin(xTymczasowy, binSize, quantity);
-    int yMax = yTymczasowe;
-    std::vector<int> xMax = xTymczasowy;
-    std:: vector<std::vector<int>> tabuList = {xTymczasowy};
+    int score = howManyBin(startSolution, binSize, quantity);
+    int bestScore = score;
+    std::vector<int> bestSolution = startSolution;
+    std:: vector<std::vector<int>> tabuList = {startSolution};
     bool betterSolutionIsFound;
     int tabuListOffset = 1;
     srand((unsigned) time(NULL));
 
     for (int i = 0; i < iterations; ++i) {
         betterSolutionIsFound = false;
-        int x = rand() % (std::end(xTymczasowy) - std::begin(xTymczasowy));
-        for (int j = 0; j < xTymczasowy.size(); ++j) {
-            std::swap(xTymczasowy[x], xTymczasowy[j]);
-            yTymczasowe = howManyBin(xTymczasowy, binSize, quantity);
-            bool isNotInTabu = std::find(tabuList.begin(), tabuList.end(), xTymczasowy) == tabuList.end();
-            if (yTymczasowe <= yMax and  isNotInTabu){
-                yMax = yTymczasowe;
-                xMax = xTymczasowy;
+        int x = rand() % (std::end(startSolution) - std::begin(startSolution));
+        for (int j = 0; j < startSolution.size(); ++j) {
+            std::swap(startSolution[x], startSolution[j]);
+            score = howManyBin(startSolution, binSize, quantity);
+            bool isNotInTabu = std::find(tabuList.begin(), tabuList.end(), startSolution) == tabuList.end();
+            if (score <= bestScore and isNotInTabu){
+                bestScore = score;
+                bestSolution = startSolution;
                 betterSolutionIsFound = true;
             }
         }
-        //jeżeli zneleźliśmy lepsze rozwiązanie dodaj do tabuListy
-        //jeśli nie to cofnij się w tabuLiście i szukaj innego rozwiązania
         if (betterSolutionIsFound){
-            tabuList.push_back(xMax);
+            tabuList.push_back(bestSolution);
             if (tabuList.size() > tabuSize) {
                 tabuList.erase(tabuList.begin());
             }
             tabuListOffset = 1;
         } else if ((int)tabuList.size()-tabuListOffset >= 0) {
-            xTymczasowy = tabuList[tabuList.size() - tabuListOffset];
+            startSolution = tabuList[tabuList.size() - tabuListOffset];
             tabuListOffset++;
             }
         else{
             break;
         }
-        std::cout << i << " " << yTymczasowe <<  " " << yMax << std::endl;
+        std::cout << i << " " << score << " " << bestScore << std::endl;
     }
 }

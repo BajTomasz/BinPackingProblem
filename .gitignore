@@ -35,3 +35,7 @@
 .idea
 cmake-build-debug/*
 CMakeFiles/*
+
+# Project
+build/*
+data/*

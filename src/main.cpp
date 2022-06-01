@@ -65,6 +65,7 @@ int main(int argc, char **argv) {
     auto tabuSize = arg(argc, argv, "tabuSize", 100);
     auto quantity = arg(argc, argv, "quantity", 500);
     auto binSize = arg(argc, argv, "binSize", 15);
+    auto uniformRealDistributionIsSet = arg(argc, argv, "uniformRealDistributionIsSet", false);
     auto generateData = arg(argc, argv, "dataGenerator", false);
 
     if(generateData){
@@ -83,7 +84,7 @@ int main(int argc, char **argv) {
         hillClimbing(data, binSize, quantity, iterations);
         hillClimbingRandom(data, binSize, quantity, iterations);
         tabuSearch(data, binSize, quantity, tabuSize, iterations);
-        simulatedAnnealing(data, binSize, quantity, iterations);
+        simulatedAnnealing(data, binSize, quantity, iterations, uniformRealDistributionIsSet);
     } else if (method == "hillClimbing") {
         hillClimbing(data, binSize, quantity, iterations);
     } else if (method == "hillClimbingRandom") {
@@ -91,7 +92,7 @@ int main(int argc, char **argv) {
     } else if (method == "tabuSearch") {
         tabuSearch(data, binSize, quantity, tabuSize, iterations);
     } else if (method == "simulatedAnnealing") {
-        simulatedAnnealing(data, binSize, quantity, iterations);
+        simulatedAnnealing(data, binSize, quantity, iterations, uniformRealDistributionIsSet);
     } else if (method == "" && generateData) {
         for (int i : data) {
             std::cout << i << std::endl;

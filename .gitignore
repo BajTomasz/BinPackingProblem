@@ -32,9 +32,11 @@
 *.app
 
 # IDE
-.idea
+.idea/*
 cmake-build-debug/*
+*/cmake-build-debug/*
 CMakeFiles/*
+*/CMakeFiles/*
 
 # Project
 build/*

@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <list>
 
-void tabuSearch(std::vector<int> startSolution, int binSize, int quantity, int tabuSize, int iterations){
+std::vector<int> tabuSearch(std::vector<int> startSolution, int binSize, int quantity, int tabuSize, int iterations){
 
     int score = howManyBin(startSolution, binSize, quantity);
     int bestScore = score;
@@ -45,4 +45,5 @@ void tabuSearch(std::vector<int> startSolution, int binSize, int quantity, int t
         }
         std::cout << i << " " << score << " " << bestScore << std::endl;
     }
+    return bestSolution;
 }

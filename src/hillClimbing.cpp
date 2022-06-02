@@ -7,10 +7,11 @@
 #include <algorithm>
 #include <random>
 
-void hillClimbing(std::vector<int> startSolution, int binSize, int quantity, int iterations) {
+std::vector<int> hillClimbing(std::vector<int> startSolution, int binSize, int quantity, int iterations) {
 
     int score = howManyBin(startSolution, binSize, quantity);
     int bestScore = score;
+    std::vector<int> bestSolution = startSolution;
 
     srand((unsigned) time(NULL));
 
@@ -21,21 +22,28 @@ void hillClimbing(std::vector<int> startSolution, int binSize, int quantity, int
             score = howManyBin(startSolution, binSize, quantity);
             if (score < bestScore) {
                 bestScore = score;
+                bestSolution = startSolution;
             }
         }
         std::cout << i << " " << score << " " << bestScore << std::endl;
     }
+    return bestSolution;
 }
 
-void hillClimbingRandom(std::vector<int> startSolution, int binSize, int quantity, int iterations) {
+std::vector<int> hillClimbingRandom(std::vector<int> startSolution, int binSize, int quantity, int iterations) {
+
     int score = howManyBin(startSolution, binSize, quantity);
     int bestScore = score;
+    std::vector<int> bestSolution = startSolution;
+
     for (int i = 0; i < iterations; ++i) {
         std::shuffle(std::begin(startSolution), std::end(startSolution), std::mt19937(std::random_device()()));
         score = howManyBin(startSolution, binSize, quantity);
         if (score < bestScore) {
             bestScore = score;
+            bestSolution = startSolution;
         }
         std::cout << i << " " << score << " " << bestScore << std::endl;
     }
+    return bestSolution;
 }

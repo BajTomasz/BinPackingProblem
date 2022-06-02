@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <random>
 
-void simulatedAnnealing(std::vector<int> startSolution, int binSize, int quantity, int iterations, bool uniformRealDistributionIsSet) {
+std::vector<int> simulatedAnnealing(std::vector<int> startSolution, int binSize, int quantity, int iterations, bool uniformRealDistributionIsSet) {
 
     int score, nextScore, bestScore;
     double boltzmannDistribution;
@@ -40,4 +40,5 @@ void simulatedAnnealing(std::vector<int> startSolution, int binSize, int quantit
         }
         std::cout << i << " " << score << " " << bestScore << std::endl;
     }
+    return bestSolution;
 }

@@ -7,7 +7,7 @@
 
 std::vector<int> dataGenerator(int minRange, int maxRange, int quantity);
 int howManyBin(std::vector<int> startSolution, int binSize, int quantity);
-void hillClimbingRandom(std::vector<int> startSolution, int binSize, int quantity, int iterations);
-void hillClimbing(std::vector<int> startSolution, int binSize, int quantity, int iterations);
-void tabuSearch(std::vector<int> startSolution, int binSize, int quantity, int tabuSize, int iterations);
-void simulatedAnnealing(std::vector<int> startSolution, int binSize, int quantity, int iterations, bool uniformRealDistributionIsSet);
+std::vector<int> hillClimbingRandom(std::vector<int> startSolution, int binSize, int quantity, int iterations);
+std::vector<int> hillClimbing(std::vector<int> startSolution, int binSize, int quantity, int iterations);
+std::vector<int> tabuSearch(std::vector<int> startSolution, int binSize, int quantity, int tabuSize, int iterations);
+std::vector<int> simulatedAnnealing(std::vector<int> startSolution, int binSize, int quantity, int iterations, bool uniformRealDistributionIsSet);

@@ -24,7 +24,9 @@ std::vector<int> hillClimbing(std::vector<int> startSolution, int binSize, int q
                 bestScore = score;
                 bestSolution = startSolution;
             }
+            std::swap(startSolution[x], startSolution[j]);
         }
+        startSolution = bestSolution;
         //std::cout << i << " " << score << " " << bestScore << std::endl;
     }
     for (auto i : bestSolution) {
@@ -41,11 +43,14 @@ std::vector<int> hillClimbingRandom(std::vector<int> startSolution, int binSize,
     std::vector<int> bestSolution = startSolution;
 
     for (int i = 0; i < iterations; ++i) {
-        std::shuffle(std::begin(startSolution), std::end(startSolution), std::mt19937(std::random_device()()));
+        int x = rand() % (std::end(startSolution) - std::begin(startSolution));
+        std::swap(startSolution[x], startSolution[i]);
         score = howManyBin(startSolution, binSize, quantity);
         if (score < bestScore) {
             bestScore = score;
             bestSolution = startSolution;
+        } else{
+            std::swap(startSolution[x], startSolution[i]);
         }
         //std::cout << i << " " << score << " " << bestScore << std::endl;
     }

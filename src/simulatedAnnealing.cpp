@@ -38,7 +38,11 @@ std::vector<int> simulatedAnnealing(std::vector<int> startSolution, int binSize,
             bestSolution = startSolution;
             bestScore = score;
         }
-        std::cout << i << " " << score << " " << bestScore << std::endl;
+        //std::cout << i << " " << score << " " << bestScore << std::endl;
     }
+    for (auto i : bestSolution) {
+        std::cout << i << ", ";
+    }
+    std::cout << std::endl << std::endl;
     return bestSolution;
 }

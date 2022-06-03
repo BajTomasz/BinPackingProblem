@@ -25,8 +25,12 @@ std::vector<int> hillClimbing(std::vector<int> startSolution, int binSize, int q
                 bestSolution = startSolution;
             }
         }
-        std::cout << i << " " << score << " " << bestScore << std::endl;
+        //std::cout << i << " " << score << " " << bestScore << std::endl;
     }
+    for (auto i : bestSolution) {
+        std::cout << i << ", ";
+    }
+    std::cout << std::endl << std::endl;
     return bestSolution;
 }
 
@@ -43,7 +47,11 @@ std::vector<int> hillClimbingRandom(std::vector<int> startSolution, int binSize,
             bestScore = score;
             bestSolution = startSolution;
         }
-        std::cout << i << " " << score << " " << bestScore << std::endl;
+        //std::cout << i << " " << score << " " << bestScore << std::endl;
     }
+    for (auto i : bestSolution) {
+        std::cout << i << ", ";
+    }
+    std::cout << std::endl << std::endl;
     return bestSolution;
 }

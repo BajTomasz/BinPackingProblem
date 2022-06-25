@@ -7,10 +7,11 @@
 #include <any>
 #include <complex>
 #include <fstream>
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <random>
+
+void printSolution(std::vector<int> bestSolution) {
+    for (auto i: bestSolution) std::cout << i << ", ";
+    std::cout << std::endl << std::endl;
+}
 
 std::vector<int> loadProblem(std::string fname) {
     std::vector<int> problem;
@@ -19,24 +20,21 @@ std::vector<int> loadProblem(std::string fname) {
     int x;
 
     file.open(fname);
-    if ( file.is_open() ) {
-        std::getline (file, line);
-        while ( file ) {
+    if (file.is_open()) {
+        std::getline(file, line);
+        while (file) {
             std::stringstream sline(line);
             sline >> x;
             problem.push_back(x);
-            std::getline (file, line);
+            std::getline(file, line);
         }
-    }
-    else {
-        std::cout << "Couldn't open file\n";
-    }
+    } else std::cout << "Couldn't open file\n";
     file.close();
     std::shuffle(std::begin(problem), std::end(problem), std::mt19937(std::random_device()()));
     return problem;
 }
 
-auto arg = [](int argc, char** argv, std::string name, auto default_value) -> decltype(default_value) {
+auto arg = [](int argc, char **argv, std::string name, auto default_value) -> decltype(default_value) {
     std::string paramname = "";
     std::any ret = default_value;
     for (auto argument: std::vector<std::string>(argv, argv + argc)) {
@@ -47,9 +45,10 @@ auto arg = [](int argc, char** argv, std::string name, auto default_value) -> de
             paramname = argument.substr(1);
         } else if (name == paramname) {
             if (std::is_same_v<decltype(default_value), int>) ret = stoi(argument);
-            else if (std::is_same_v<decltype(default_value), double>) ret = stod( argument );
+            else if (std::is_same_v<decltype(default_value), double>) ret = stod(argument);
             else if (std::is_same_v<decltype(default_value), char>) ret = argument.at(0);
-            else if (std::is_same_v<decltype(default_value), bool>) ret = (argument=="true") || (argument=="1") || (argument=="yes");
+            else if (std::is_same_v<decltype(default_value), bool>)
+                ret = (argument == "true") || (argument == "1") || (argument == "yes");
             else ret = argument;
             paramname = "";
         }
@@ -72,39 +71,36 @@ int main(int argc, char **argv) {
     auto populationSize = arg(argc, argv, "populationSize", 400);
     auto pointCrossover = arg(argc, argv, "pointCrossover", 1);
     auto mutationMethod = arg(argc, argv, "mutationMethod", 1);
+    auto printProgress = arg(argc, argv, "printProgress", 0);
     auto generateData = arg(argc, argv, "dataGenerator", false);
 
-    if(generateData){
-        data = dataGenerator(minWeight, maxWeight, quantity);
-    } else if(fname.empty()){
+    if (generateData) data = dataGenerator(minWeight, maxWeight, quantity);
+    else if (fname.empty()) {
         int record;
-        while(std::cin >> record){
-             data.push_back(record);
-        }
-    } else{
+        while (std::cin >> record)data.push_back(record);
+    } else {
         data = loadProblem(fname);
         quantity = data.size();
     }
 
     if (method == "all") {
-        hillClimbing(data, binSize, quantity, iterations);
-        hillClimbingRandom(data, binSize, quantity, iterations);
-        tabuSearch(data, binSize, quantity, tabuSize, iterations);
-        simulatedAnnealing(data, binSize, quantity, iterations, uniformRealDistributionIsSet);
+        hillClimbing(data, binSize, quantity, iterations, printProgress);
+        hillClimbingRandom(data, binSize, quantity, iterations, printProgress);
+        tabuSearch(data, binSize, quantity, tabuSize, iterations, printProgress);
+        simulatedAnnealing(data, binSize, quantity, iterations, uniformRealDistributionIsSet, printProgress);
+        geneticAlgorithm(data, binSize, quantity, iterations, populationSize, pointCrossover, mutationMethod, printProgress);
     } else if (method == "hillClimbing") {
-        hillClimbing(data, binSize, quantity, iterations);
+        hillClimbing(data, binSize, quantity, iterations, printProgress);
     } else if (method == "hillClimbingRandom") {
-        hillClimbingRandom(data, binSize, quantity, iterations);
+        hillClimbingRandom(data, binSize, quantity, iterations, printProgress);
     } else if (method == "tabuSearch") {
-        tabuSearch(data, binSize, quantity, tabuSize, iterations);
+        tabuSearch(data, binSize, quantity, tabuSize, iterations, printProgress);
     } else if (method == "simulatedAnnealing") {
-        simulatedAnnealing(data, binSize, quantity, iterations, uniformRealDistributionIsSet);
+        simulatedAnnealing(data, binSize, quantity, iterations, uniformRealDistributionIsSet, printProgress);
     } else if (method == "geneticAlgorithm") {
-        geneticAlgorithm(data, binSize, quantity, iterations, populationSize, pointCrossover, mutationMethod);
+        geneticAlgorithm(data, binSize, quantity, iterations, populationSize, pointCrossover, mutationMethod, printProgress);
     } else if (method == "" && generateData) {
-        for (int i : data) {
-            std::cout << i << std::endl;
-        }
+        printSolution(data);
     }
     return 0;
 }

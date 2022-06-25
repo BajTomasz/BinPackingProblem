@@ -4,45 +4,38 @@
 
 #include "algorithms.h"
 
-#include <algorithm>
-#include <random>
-
-std::vector<int> simulatedAnnealing(std::vector<int> startSolution, int binSize, int quantity, int iterations, bool uniformRealDistributionIsSet) {
-
+std::vector<int> simulatedAnnealing(std::vector<int> startSolution, int binSize, int quantity, int iterations,
+                                    bool uniformRealDistributionIsSet, bool printProgress) {
     int score, nextScore, bestScore;
     double boltzmannDistribution;
     std::vector<int> bestSolution = startSolution;
     std::vector<int> nextSolution = startSolution;
-    std::random_device rd;
-    std::mt19937 gen(rd());
+    std::default_random_engine generator;
     std::uniform_real_distribution<> uniformRealDistribution(0.0, 1.0);
-    std::normal_distribution<double> normalDistribution(0.5,0.25);
+    std::normal_distribution<double> normalDistribution(0.5, 0.25);
     score = howManyBin(startSolution, binSize, quantity);
 
     for (int i = 0; i < iterations; ++i) {
-        std::shuffle(std::begin(nextSolution), std::end(nextSolution), gen);
+        std::shuffle(std::begin(nextSolution), std::end(nextSolution), generator);
         nextScore = howManyBin(nextSolution, binSize, quantity);
-        boltzmannDistribution = exp(-abs(score - nextScore) / (iterations/(i+1)));
-        if ( nextScore < score ){
+        boltzmannDistribution = exp(-abs(score - nextScore) / (iterations / (i + 1)));
+        if (nextScore < score) {
             startSolution = nextSolution;
             score = nextScore;
-        } else if (uniformRealDistributionIsSet && (uniformRealDistribution(gen) < boltzmannDistribution)) {
-                startSolution = nextSolution;
-                score = nextScore;
-        } else if (!uniformRealDistributionIsSet && (normalDistribution(gen) < boltzmannDistribution)) {
+        } else if (uniformRealDistributionIsSet && (uniformRealDistribution(generator) < boltzmannDistribution)) {
+            startSolution = nextSolution;
+            score = nextScore;
+        } else if (!uniformRealDistributionIsSet && (normalDistribution(generator) < boltzmannDistribution)) {
             startSolution = nextSolution;
             score = nextScore;
         }
         bestScore = howManyBin(bestSolution, binSize, quantity);
-        if (score < bestScore){
+        if (score < bestScore) {
             bestSolution = startSolution;
             bestScore = score;
         }
-        //std::cout << i << " " << score << " " << bestScore << std::endl;
+        if (printProgress) std::cout << i << " " << score << " " << bestScore << std::endl;
     }
-    for (auto i : bestSolution) {
-        std::cout << i << ", ";
-    }
-    std::cout << std::endl << std::endl;
+    if (!printProgress) printSolution(bestSolution);
     return bestSolution;
 }

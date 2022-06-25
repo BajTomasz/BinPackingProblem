@@ -66,7 +66,7 @@ roulette(std::vector<std::vector<int>> population, std::vector<int> populationFi
     return population;
 }
 
-std::vector<std::vector<int>> pointCrossover(std::vector<std::vector<int>> parents) {
+std::vector<std::vector<int>> onePointCrossover(std::vector<std::vector<int>> parents) {
     std::vector<std::vector<int>> offspring = parents;
     srand((unsigned) time(NULL));
     int i = 0;
@@ -167,7 +167,6 @@ std::vector<std::vector<int>> twoPointCrossover(std::vector<std::vector<int>> pa
     return offspring;
 }
 
-
 std::vector<std::vector<int>> swapMutation(std::vector<std::vector<int>> population) {
     for (int i = 0; i < population.size() / 10; ++i) {
         std::default_random_engine generator;
@@ -197,7 +196,7 @@ std::vector<std::vector<int>> shuffleMutation(std::vector<std::vector<int>> popu
 }
 
 std::vector<int>
-geneticAlgorithm(std::vector<int> data, int binSize, int quantity, int iterations, int populationSize) {
+geneticAlgorithm(std::vector<int> data, int binSize, int quantity, int iterations, int populationSize, bool pointCrossover, bool mutationMethod) {
     int iter = iterations;
     bool continueCondition = true;
 
@@ -219,10 +218,13 @@ geneticAlgorithm(std::vector<int> data, int binSize, int quantity, int iteration
         std::vector<std::vector<int>> parents = roulette(population, populationFitness, bestScore);
 
         //crossing
-        population = twoPointCrossover(parents);
+        if(pointCrossover) population = onePointCrossover(parents);
+        else population = twoPointCrossover(parents);
 
         //mutating a generation
-        population = shuffleMutation(population);
+        if(mutationMethod) swapMutation(population);
+        else population = shuffleMutation(population);
+
         populationFitness = getPopulationFitness(data, population, binSize);
 
         for (int i = 0; i < populationFitness.size(); i++) {
@@ -237,7 +239,7 @@ geneticAlgorithm(std::vector<int> data, int binSize, int quantity, int iteration
         if (!iter) {
             continueCondition = false;
         }
-        std::cout << iterations - iter << " " << "score" << " " << bestScore << std::endl;
+        //std::cout << iterations - iter << " " << "score" << " " << bestScore << std::endl;
     } while (continueCondition);
 
     for (auto i: bestSolution) {

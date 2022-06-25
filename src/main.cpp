@@ -69,6 +69,9 @@ int main(int argc, char **argv) {
     auto quantity = arg(argc, argv, "quantity", 500);
     auto binSize = arg(argc, argv, "binSize", 15);
     auto uniformRealDistributionIsSet = arg(argc, argv, "uniformRealDistributionIsSet", false);
+    auto populationSize = arg(argc, argv, "populationSize", 400);
+    auto pointCrossover = arg(argc, argv, "pointCrossover", 1);
+    auto mutationMethod = arg(argc, argv, "mutationMethod", 1);
     auto generateData = arg(argc, argv, "dataGenerator", false);
 
     if(generateData){
@@ -97,7 +100,7 @@ int main(int argc, char **argv) {
     } else if (method == "simulatedAnnealing") {
         simulatedAnnealing(data, binSize, quantity, iterations, uniformRealDistributionIsSet);
     } else if (method == "geneticAlgorithm") {
-        geneticAlgorithm(data, binSize, quantity, iterations, 100);
+        geneticAlgorithm(data, binSize, quantity, iterations, populationSize, pointCrossover, mutationMethod);
     } else if (method == "" && generateData) {
         for (int i : data) {
             std::cout << i << std::endl;

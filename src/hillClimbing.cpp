@@ -23,8 +23,9 @@ std::vector<int> hillClimbing(std::vector<int> startSolution, int binSize, int q
             if (score < bestScore) {
                 bestScore = score;
                 bestSolution = startSolution;
+            } else{
+                std::swap(startSolution[x], startSolution[j]);
             }
-            std::swap(startSolution[x], startSolution[j]);
         }
         startSolution = bestSolution;
         //std::cout << i << " " << score << " " << bestScore << std::endl;
@@ -41,6 +42,7 @@ std::vector<int> hillClimbingRandom(std::vector<int> startSolution, int binSize,
     int score = howManyBin(startSolution, binSize, quantity);
     int bestScore = score;
     std::vector<int> bestSolution = startSolution;
+    srand((unsigned) time(NULL));
 
     for (int i = 0; i < iterations; ++i) {
         int x = rand() % (std::end(startSolution) - std::begin(startSolution));

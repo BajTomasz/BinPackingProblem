@@ -9,6 +9,8 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <random>
 
 std::vector<int> loadProblem(std::string fname) {
     std::vector<int> problem;
@@ -18,18 +20,19 @@ std::vector<int> loadProblem(std::string fname) {
 
     file.open(fname);
     if ( file.is_open() ) {
+        std::getline (file, line);
         while ( file ) {
-            std::getline (file, line);
             std::stringstream sline(line);
             sline >> x;
             problem.push_back(x);
+            std::getline (file, line);
         }
     }
     else {
         std::cout << "Couldn't open file\n";
     }
     file.close();
-
+    std::shuffle(std::begin(problem), std::end(problem), std::mt19937(std::random_device()()));
     return problem;
 }
 
@@ -93,6 +96,8 @@ int main(int argc, char **argv) {
         tabuSearch(data, binSize, quantity, tabuSize, iterations);
     } else if (method == "simulatedAnnealing") {
         simulatedAnnealing(data, binSize, quantity, iterations, uniformRealDistributionIsSet);
+    } else if (method == "geneticAlgorithm") {
+        geneticAlgorithm(data, binSize, quantity, iterations, 100);
     } else if (method == "" && generateData) {
         for (int i : data) {
             std::cout << i << std::endl;

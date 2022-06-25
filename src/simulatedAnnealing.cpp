@@ -17,10 +17,10 @@ std::vector<int> simulatedAnnealing(std::vector<int> startSolution, int binSize,
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> uniformRealDistribution(0.0, 1.0);
     std::normal_distribution<double> normalDistribution(0.5,0.25);
+    score = howManyBin(startSolution, binSize, quantity);
 
     for (int i = 0; i < iterations; ++i) {
         std::shuffle(std::begin(nextSolution), std::end(nextSolution), gen);
-        score = howManyBin(startSolution, binSize, quantity);
         nextScore = howManyBin(nextSolution, binSize, quantity);
         boltzmannDistribution = exp(-abs(score - nextScore) / (iterations/(i+1)));
         if ( nextScore < score ){

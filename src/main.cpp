@@ -69,9 +69,9 @@ int main(int argc, char **argv) {
     auto binSize = arg(argc, argv, "binSize", 15);
     auto uniformRealDistributionIsSet = arg(argc, argv, "uniformRealDistributionIsSet", false);
     auto populationSize = arg(argc, argv, "populationSize", 400);
-    auto pointCrossover = arg(argc, argv, "pointCrossover", 1);
-    auto mutationMethod = arg(argc, argv, "mutationMethod", 1);
-    auto printProgress = arg(argc, argv, "printProgress", 0);
+    auto pointCrossover = arg(argc, argv, "pointCrossover", true);
+    auto mutationMethod = arg(argc, argv, "mutationMethod", true);
+    auto printProgress = arg(argc, argv, "printProgress", false);
     auto generateData = arg(argc, argv, "dataGenerator", false);
 
     if (generateData) data = dataGenerator(minWeight, maxWeight, quantity);

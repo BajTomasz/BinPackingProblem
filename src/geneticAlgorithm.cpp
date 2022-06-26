@@ -181,6 +181,7 @@ geneticAlgorithm(std::vector<int> data, int binSize, int quantity, int iteration
     std::vector<int> populationFitness = getPopulationFitness(data, population, binSize);
     int bestScore = populationFitness[0];
     std::vector<int> bestSolution = population[0];
+    std::vector<int> bestSolutionData;
 
     for (int i = 0; i < populationFitness.size(); ++i) {
         if (populationFitness[i] < bestScore) {
@@ -215,6 +216,11 @@ geneticAlgorithm(std::vector<int> data, int binSize, int quantity, int iteration
         if (printProgress) std::cout << iterations - iter << " " << "score" << " " << bestScore << std::endl;
     } while (continueCondition);
 
-    if (!printProgress) printSolution(bestSolution);
-    return bestSolution;
+    if (!printProgress) {
+        for (auto i : bestSolution) {
+            bestSolutionData.push_back(data[i]);
+        }
+        printSolution(bestSolutionData);
+    }
+    return bestSolutionData;
 }

@@ -71,7 +71,7 @@ int main(int argc, char **argv) {
     auto populationSize = arg(argc, argv, "populationSize", 400);
     auto pointCrossover = arg(argc, argv, "pointCrossover", true);
     auto mutationMethod = arg(argc, argv, "mutationMethod", true);
-    auto printProgress = arg(argc, argv, "printProgress", false);
+    auto printMode = arg(argc, argv, "printMode", 0);
     auto generateData = arg(argc, argv, "dataGenerator", false);
 
     if (generateData) data = dataGenerator(minWeight, maxWeight, quantity);
@@ -83,22 +83,21 @@ int main(int argc, char **argv) {
         quantity = data.size();
     }
 
-    if (method == "all") {
-        hillClimbing(data, binSize, quantity, iterations, printProgress);
-        hillClimbingRandom(data, binSize, quantity, iterations, printProgress);
-        tabuSearch(data, binSize, quantity, tabuSize, iterations, printProgress);
-        simulatedAnnealing(data, binSize, quantity, iterations, uniformRealDistributionIsSet, printProgress);
-        geneticAlgorithm(data, binSize, quantity, iterations, populationSize, pointCrossover, mutationMethod, printProgress);
-    } else if (method == "hillClimbing") {
-        hillClimbing(data, binSize, quantity, iterations, printProgress);
+    if (method == "hillClimbing") {
+        auto hc = hillClimbing(data, binSize, quantity, iterations, printMode);
+        if(printMode == 0) printSolution(hc);
     } else if (method == "hillClimbingRandom") {
-        hillClimbingRandom(data, binSize, quantity, iterations, printProgress);
+        auto hcr = hillClimbingRandom(data, binSize, quantity, iterations, printMode);
+        if(printMode == 0) printSolution(hcr);
     } else if (method == "tabuSearch") {
-        tabuSearch(data, binSize, quantity, tabuSize, iterations, printProgress);
+        auto ts = tabuSearch(data, binSize, quantity, tabuSize, iterations, printMode);
+        if(printMode == 0) printSolution(ts);
     } else if (method == "simulatedAnnealing") {
-        simulatedAnnealing(data, binSize, quantity, iterations, uniformRealDistributionIsSet, printProgress);
+        auto sa = simulatedAnnealing(data, binSize, quantity, iterations, uniformRealDistributionIsSet, printMode);
+        if(printMode == 0) printSolution(sa);
     } else if (method == "geneticAlgorithm") {
-        geneticAlgorithm(data, binSize, quantity, iterations, populationSize, pointCrossover, mutationMethod, printProgress);
+        auto ga = geneticAlgorithm(data, binSize, quantity, iterations, populationSize, pointCrossover, mutationMethod, printMode);
+        if(printMode == 0) printSolution(ga);
     } else if (method == "" && generateData) {
         printSolution(data);
     }

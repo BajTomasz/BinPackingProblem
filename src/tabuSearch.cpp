@@ -4,8 +4,8 @@
 
 #include "algorithms.h"
 
-std::vector<int> tabuSearch(std::vector<int> startSolution, int binSize, int quantity, int tabuSize, int iterations,
-                            bool printProgress) {
+std::vector<int>
+tabuSearch(std::vector<int> startSolution, int binSize, int quantity, int tabuSize, int iterations, int printMode) {
     int score = howManyBin(startSolution, binSize, quantity);
     int bestScore = score;
     std::vector<int> bestSolution = startSolution;
@@ -36,8 +36,7 @@ std::vector<int> tabuSearch(std::vector<int> startSolution, int binSize, int qua
             startSolution = tabuList[tabuList.size() - tabuListOffset];
             tabuListOffset++;
         } else break;
-        if (printProgress) std::cout << i << " " << score << " " << bestScore << std::endl;
+        if (printMode == 1) std::cout << i << " " << score << " " << bestScore << std::endl;
     }
-    if (!printProgress) printSolution(bestSolution);
     return bestSolution;
 }

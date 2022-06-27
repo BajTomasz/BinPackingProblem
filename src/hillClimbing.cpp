@@ -5,7 +5,7 @@
 #include "algorithms.h"
 
 std::vector<int>
-hillClimbing(std::vector<int> startSolution, int binSize, int quantity, int iterations, bool printProgress) {
+hillClimbing(std::vector<int> startSolution, int binSize, int quantity, int iterations, int printMode) {
     std::default_random_engine generator;
     int score = howManyBin(startSolution, binSize, quantity);
     int bestScore = score;
@@ -23,14 +23,13 @@ hillClimbing(std::vector<int> startSolution, int binSize, int quantity, int iter
             } else std::swap(startSolution[x], startSolution[j]);
         }
         startSolution = bestSolution;
-        if (printProgress) std::cout << i << " " << score << " " << bestScore << std::endl;
+        if (printMode == 1) std::cout << i << " " << score << " " << bestScore << std::endl;
     }
-    if (!printProgress) printSolution(bestSolution);
     return bestSolution;
 }
 
 std::vector<int>
-hillClimbingRandom(std::vector<int> startSolution, int binSize, int quantity, int iterations, bool printProgress) {
+hillClimbingRandom(std::vector<int> startSolution, int binSize, int quantity, int iterations, int printMode) {
     std::default_random_engine generator;
     int score = howManyBin(startSolution, binSize, quantity);
     int bestScore = score;
@@ -45,8 +44,7 @@ hillClimbingRandom(std::vector<int> startSolution, int binSize, int quantity, in
             bestScore = score;
             bestSolution = startSolution;
         } else std::swap(startSolution[x], startSolution[i]);
-        if (printProgress) std::cout << i << " " << score << " " << bestScore << std::endl;
+        if (printMode == 1) std::cout << i << " " << score << " " << bestScore << std::endl;
     }
-    if (!printProgress) printSolution(bestSolution);
     return bestSolution;
 }

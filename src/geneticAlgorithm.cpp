@@ -172,7 +172,7 @@ std::vector<std::vector<int>> shuffleMutation(std::vector<std::vector<int>> popu
 
 std::vector<int>
 geneticAlgorithm(std::vector<int> data, int binSize, int quantity, int iterations, int populationSize,
-                 bool pointCrossover, bool mutationMethod, bool printProgress) {
+                 bool pointCrossover, bool mutationMethod, int printMode) {
     int iter = iterations;
     bool continueCondition = true;
 
@@ -213,14 +213,10 @@ geneticAlgorithm(std::vector<int> data, int binSize, int quantity, int iteration
         //ending do-while
         iter--;
         if (!iter) continueCondition = false;
-        if (printProgress) std::cout << iterations - iter << " " << "score" << " " << bestScore << std::endl;
+        if (printMode) std::cout << iterations - iter << " " << "score" << " " << bestScore << std::endl;
     } while (continueCondition);
 
-    if (!printProgress) {
-        for (auto i : bestSolution) {
-            bestSolutionData.push_back(data[i]);
-        }
-        printSolution(bestSolutionData);
-    }
+    for (auto i: bestSolution) bestSolutionData.push_back(data[i]);
+
     return bestSolutionData;
 }

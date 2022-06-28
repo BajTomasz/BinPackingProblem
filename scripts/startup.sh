@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-./../build/BinPackingProblem -fname ../data/data.csv -method hillClimbing -printProgress 1 > resultHillClimbing.txt
-./../build/BinPackingProblem -fname ../data/data.csv -method hillClimbingRandom -printProgress 1 > resultHillClimbingRandom.txt
-./../build/BinPackingProblem -fname ../data/data.csv -method tabuSearch -printProgress 1 > resultTabu.txt
-./../build/BinPackingProblem -fname ../data/data.csv -method simulatedAnnealing -printProgress 1 > resultSimulatedAnnealing.txt
-./../build/BinPackingProblem -fname ../data/data.csv -method geneticAlgorithm -iterations 100 -printProgress 1 > resultGeneticAlgorithm.txt
+./../build/BinPackingProblem -fname ../data/data.csv -method hillClimbing -printMode 1 > resultHillClimbing.txt
+./../build/BinPackingProblem -fname ../data/data.csv -method hillClimbingRandom -printMode 1 > resultHillClimbingRandom.txt
+./../build/BinPackingProblem -fname ../data/data.csv -method tabuSearch -printMode 1 > resultTabu.txt
+./../build/BinPackingProblem -fname ../data/data.csv -method simulatedAnnealing -printMode 1 > resultSimulatedAnnealing.txt
+./../build/BinPackingProblem -fname ../data/data.csv -method geneticAlgorithm -iterations 100 -printMode 1 > resultGeneticAlgorithm.txt
 
 gnuplot -e "plot
  'resultHillClimbing.txt' u 1:3 w lines,

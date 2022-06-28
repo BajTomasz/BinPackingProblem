@@ -72,6 +72,7 @@ int main(int argc, char **argv) {
     auto pointCrossover = arg(argc, argv, "pointCrossover", true);
     auto mutationMethod = arg(argc, argv, "mutationMethod", true);
     auto printMode = arg(argc, argv, "printMode", 0);
+    auto endMode = arg(argc, argv, "endMode", 0);
     auto generateData = arg(argc, argv, "dataGenerator", false);
 
     if (generateData) data = dataGenerator(minWeight, maxWeight, quantity);
@@ -82,22 +83,25 @@ int main(int argc, char **argv) {
         data = loadProblem(fname);
         quantity = data.size();
     }
+    if (endMode == 1) iterations = iterations * CLOCKS_PER_SEC / 1000;
 
     if (method == "hillClimbing") {
-        auto hc = hillClimbing(data, binSize, quantity, iterations, printMode);
-        if(printMode == 0) printSolution(hc);
+        auto hc = hillClimbing(data, binSize, quantity, iterations, printMode, endMode);
+        if (printMode == 0) printSolution(hc);
     } else if (method == "hillClimbingRandom") {
-        auto hcr = hillClimbingRandom(data, binSize, quantity, iterations, printMode);
-        if(printMode == 0) printSolution(hcr);
+        auto hcr = hillClimbingRandom(data, binSize, quantity, iterations, printMode, endMode);
+        if (printMode == 0) printSolution(hcr);
     } else if (method == "tabuSearch") {
-        auto ts = tabuSearch(data, binSize, quantity, tabuSize, iterations, printMode);
-        if(printMode == 0) printSolution(ts);
+        auto ts = tabuSearch(data, binSize, quantity, tabuSize, iterations, printMode, endMode);
+        if (printMode == 0) printSolution(ts);
     } else if (method == "simulatedAnnealing") {
-        auto sa = simulatedAnnealing(data, binSize, quantity, iterations, uniformRealDistributionIsSet, printMode);
-        if(printMode == 0) printSolution(sa);
+        auto sa = simulatedAnnealing(data, binSize, quantity, iterations, uniformRealDistributionIsSet, printMode,
+                                     endMode);
+        if (printMode == 0) printSolution(sa);
     } else if (method == "geneticAlgorithm") {
-        auto ga = geneticAlgorithm(data, binSize, quantity, iterations, populationSize, pointCrossover, mutationMethod, printMode);
-        if(printMode == 0) printSolution(ga);
+        auto ga = geneticAlgorithm(data, binSize, quantity, iterations, populationSize, pointCrossover, mutationMethod,
+                                   printMode, endMode);
+        if (printMode == 0) printSolution(ga);
     } else if (method == "" && generateData) {
         printSolution(data);
     }

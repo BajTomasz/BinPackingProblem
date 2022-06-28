@@ -172,8 +172,7 @@ std::vector<std::vector<int>> shuffleMutation(std::vector<std::vector<int>> popu
 
 std::vector<int>
 geneticAlgorithm(std::vector<int> data, int binSize, int quantity, int iterations, int populationSize,
-                 bool pointCrossover, bool mutationMethod, int printMode) {
-    int iter = iterations;
+                 bool pointCrossover, bool mutationMethod, int printMode, int endMode) {
     bool continueCondition = true;
 
     //create first population
@@ -182,15 +181,18 @@ geneticAlgorithm(std::vector<int> data, int binSize, int quantity, int iteration
     int bestScore = populationFitness[0];
     std::vector<int> bestSolution = population[0];
     std::vector<int> bestSolutionData;
+    int i = 0;
 
-    for (int i = 0; i < populationFitness.size(); ++i) {
-        if (populationFitness[i] < bestScore) {
-            bestScore = populationFitness[i];
-            bestSolution = population[i];
+    for (int j = 0; j < populationFitness.size(); ++j) {
+        if (populationFitness[j] < bestScore) {
+            bestScore = populationFitness[j];
+            bestSolution = population[j];
         }
     }
+    clock_t start = clock();
+    clock_t end = clock();
 
-    do {
+    while (continueCondition) {
         //selection parents
         std::vector<std::vector<int>> parents = roulette(population, populationFitness, bestScore);
 
@@ -203,19 +205,22 @@ geneticAlgorithm(std::vector<int> data, int binSize, int quantity, int iteration
         else population = shuffleMutation(population);
         populationFitness = getPopulationFitness(data, population, binSize);
 
-        for (int i = 0; i < populationFitness.size(); i++) {
-            if (bestScore > populationFitness[i]) {
-                bestScore = populationFitness[i];
-                bestSolution = population[i];
+        for (int j = 0; j < populationFitness.size(); j++) {
+            if (bestScore > populationFitness[j]) {
+                bestScore = populationFitness[j];
+                bestSolution = population[j];
             }
         }
+        if (printMode == 1) std::cout << i << " " << "score" << " " << bestScore << std::endl;
 
         //ending do-while
-        iter--;
-        if (!iter) continueCondition = false;
-        if (printMode) std::cout << iterations - iter << " " << "score" << " " << bestScore << std::endl;
-    } while (continueCondition);
+        if (endMode == 0) ++i;
+        else if (endMode == 1) i = end - start;
+        if (endMode == 0 && i > iterations) continueCondition = false;
+        else if (endMode == 1 && i > iterations) continueCondition = false;
+        end = clock();
 
+    }
     for (auto i: bestSolution) bestSolutionData.push_back(data[i]);
 
     return bestSolutionData;

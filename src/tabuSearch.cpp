@@ -5,7 +5,8 @@
 #include "algorithms.h"
 
 std::vector<int>
-tabuSearch(std::vector<int> startSolution, int binSize, int quantity, int tabuSize, int iterations, int printMode) {
+tabuSearch(std::vector<int> startSolution, int binSize, int quantity, int tabuSize, int iterations, int printMode,
+           int endMode) {
     int score = howManyBin(startSolution, binSize, quantity);
     int bestScore = score;
     std::vector<int> bestSolution = startSolution;
@@ -14,10 +15,14 @@ tabuSearch(std::vector<int> startSolution, int binSize, int quantity, int tabuSi
     int tabuListOffset = 1;
     std::default_random_engine generator;
     std::uniform_int_distribution<int> dist(0, std::end(startSolution) - std::begin(startSolution));
+    int i = 0;
+    bool continueCondition = true;
+    clock_t start = clock();
+    clock_t end = clock();
+    int x = dist(generator);
 
-    for (int i = 0; i < iterations; ++i) {
+    while (continueCondition) {
         betterSolutionIsFound = false;
-        int x = dist(generator);
         for (int j = 0; j < startSolution.size(); ++j) {
             std::swap(startSolution[x], startSolution[j]);
             score = howManyBin(startSolution, binSize, quantity);
@@ -26,6 +31,7 @@ tabuSearch(std::vector<int> startSolution, int binSize, int quantity, int tabuSi
                 bestScore = score;
                 bestSolution = startSolution;
                 betterSolutionIsFound = true;
+                x = j;
             }
         }
         if (betterSolutionIsFound) {
@@ -37,6 +43,12 @@ tabuSearch(std::vector<int> startSolution, int binSize, int quantity, int tabuSi
             tabuListOffset++;
         } else break;
         if (printMode == 1) std::cout << i << " " << score << " " << bestScore << std::endl;
+
+        if (endMode == 0) ++i;
+        else if (endMode == 1) i = end - start;
+        if (endMode == 0 && i > iterations) continueCondition = false;
+        else if (endMode == 1 && i > iterations) continueCondition = false;
+        end = clock();
     }
     return bestSolution;
 }

@@ -15,17 +15,27 @@ hillClimbing(std::vector<int> startSolution, int binSize, int quantity, int iter
     bool continueCondition = true;
     clock_t start = clock();
     clock_t end = clock();
+    int x = 0;
+    bool betterSolutionIsFound;
 
     while (continueCondition) {
-        int x = dist(generator);
+        betterSolutionIsFound = false;
         for (int j = 0; j < startSolution.size(); ++j) {
             std::swap(startSolution[x], startSolution[j]);
             score = howManyBin(startSolution, binSize, quantity);
             if (score < bestScore) {
                 bestScore = score;
                 bestSolution = startSolution;
+                betterSolutionIsFound = true;
             } else std::swap(startSolution[x], startSolution[j]);
         }
+
+        if (betterSolutionIsFound) {
+            startSolution = bestSolution;
+            x = 0;
+        } else if (x < startSolution.size() - 1) x++;
+        else continueCondition = false;
+
         if (printMode == 1) std::cout << i << " " << score << " " << bestScore << std::endl;
 
         if (endMode == 0) ++i;

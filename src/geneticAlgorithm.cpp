@@ -27,7 +27,7 @@ std::vector<int> getPopulationFitness(std::vector<int> data, std::vector<std::ve
 }
 
 std::vector<std::vector<int>>
-roulette(std::vector<std::vector<int>> population, std::vector<int> populationFitness, int bestScore) {
+burtalRoulette(std::vector<std::vector<int>> population, std::vector<int> populationFitness, int bestScore) {
     long sumOfPopulationFitness = 0;
     int populationSize = population.size();
     std::default_random_engine generator;
@@ -57,8 +57,38 @@ roulette(std::vector<std::vector<int>> population, std::vector<int> populationFi
     return population;
 }
 
+std::vector<std::vector<int>>
+roulette(std::vector<std::vector<int>> population, std::vector<int> populationFitness, int worstScore) {
+    long sumOfPopulationFitness = 0;
+    int populationSize = population.size();
+    std::default_random_engine generator;
+    std::vector<std::vector<int>> parent;
+
+    for (int i = 0; i < populationSize; ++i) {
+        populationFitness[i] = worstScore - populationFitness[i];
+        sumOfPopulationFitness += populationFitness[i];
+    }
+
+    for (int j = 0; j < populationSize; j++) {
+        int offset = 0;
+        std::uniform_int_distribution<int> dist(0, sumOfPopulationFitness - 1);
+        if (sumOfPopulationFitness != 0) offset = dist(generator);
+        //searching randomly selected parent
+        int z = 0;
+        while (offset > 0) {
+            if (offset < populationFitness[z]) break;
+            else {
+                offset = offset - populationFitness[z];
+                z++;
+            }
+        }
+        parent.push_back(population[z]);
+    }
+    return parent;
+}
+
 std::vector<std::vector<int>> onePointCrossover(std::vector<std::vector<int>> parents) {
-    std::vector<std::vector<int>> offspring = parents;
+    std::vector<std::vector<int>> offspring;
     int i = 0;
     std::default_random_engine generator;
 
@@ -89,7 +119,7 @@ std::vector<std::vector<int>> onePointCrossover(std::vector<std::vector<int>> pa
 }
 
 std::vector<std::vector<int>> twoPointCrossover(std::vector<std::vector<int>> parents) {
-    std::vector<std::vector<int>> offspring = parents;
+    std::vector<std::vector<int>> offspring;
     int i = 0;
     std::default_random_engine generator;
 
@@ -179,6 +209,7 @@ geneticAlgorithm(std::vector<int> data, int binSize, int quantity, int iteration
     std::vector<std::vector<int>> population = createPopulation(populationSize, quantity);;
     std::vector<int> populationFitness = getPopulationFitness(data, population, binSize);
     int bestScore = populationFitness[0];
+    int worstScore = bestScore;
     std::vector<int> bestSolution = population[0];
     std::vector<int> bestSolutionData;
     int i = 0;
@@ -188,13 +219,14 @@ geneticAlgorithm(std::vector<int> data, int binSize, int quantity, int iteration
             bestScore = populationFitness[j];
             bestSolution = population[j];
         }
+        if (populationFitness[j] > worstScore) worstScore = populationFitness[j];
     }
     clock_t start = clock();
     clock_t end = clock();
 
     while (continueCondition) {
         //selection parents
-        std::vector<std::vector<int>> parents = roulette(population, populationFitness, bestScore);
+        std::vector<std::vector<int>> parents = roulette(population, populationFitness, worstScore);
 
         //crossing
         if (pointCrossover) population = onePointCrossover(parents);

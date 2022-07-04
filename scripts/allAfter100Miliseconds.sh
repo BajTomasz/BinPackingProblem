@@ -5,7 +5,7 @@ make -j `nproc`
 
 ./BinPackingProblem -fname ../data/data.csv -method hillClimbing -printMode 1 -iterations 100 -endMode 1 > resultHillClimbing.txt
 ./BinPackingProblem -fname ../data/data.csv -method hillClimbingRandom -printMode 1 -iterations 100 -endMode 1 > resultHillClimbingRandom.txt
-./BinPackingProblem -fname ../data/data.csv -method tabuSearch -printMode 1 -iterations 1 -endMode 100 > resultTabu.txt
+./BinPackingProblem -fname ../data/data.csv -method tabuSearch -printMode 1 -iterations 100 -endMode 1 > resultTabu.txt
 ./BinPackingProblem -fname ../data/data.csv -method simulatedAnnealing -printMode 1 -iterations 100 -endMode 1 > resultSimulatedAnnealing.txt
 ./BinPackingProblem -fname ../data/data.csv -method geneticAlgorithm -printMode 1 -iterations 100 -endMode 1 -populationSize 50 > resultGeneticAlgorithm.txt
 
